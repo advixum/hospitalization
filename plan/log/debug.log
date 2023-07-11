@@ -1,0 +1,26 @@
+ERROR 2023-03-14 13:08:22,497 bad character range ,-* at position 28 views
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\pr\django\hospitalization\plan\views.py", line 276, in post
+    inits.update(self.search_inits(plain_text))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\pr\django\hospitalization\plan\views.py", line 347, in search_inits
+    regex = re.compile(v)
+            ^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\__init__.py", line 227, in compile
+    return _compile(pattern, flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\__init__.py", line 294, in _compile
+    p = _compiler.compile(pattern, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\_compiler.py", line 743, in compile
+    p = _parser.parse(p, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\_parser.py", line 980, in parse
+    p = _parse_sub(source, state, flags & SRE_FLAG_VERBOSE, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\_parser.py", line 455, in _parse_sub
+    itemsappend(_parse(source, state, verbose, nested + 1,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Programs\Python311\Lib\re\_parser.py", line 612, in _parse
+    raise source.error(msg, len(this) + 1 + len(that))
+re.error: bad character range ,-* at position 28

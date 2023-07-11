@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Новый пациент</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <meta name="description" content="Создание новой записи">
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv.js' %}"></script><![endif]-->
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv-printshiv.js' %}"></script><![endif]-->
+</head>
+<body>
+    {% include './head.html' %} 
+    <br>
+    <div class="split left">
+        Шаблоны консультивного заключения: 
+        <a href="{% static 'files/Шаблон.rtf' %}">.rtf</a>
+        <a href="{% static 'files/Шаблон.docx' %}">.docx</a>
+        {% if object %}
+            <form method="post">
+                {% csrf_token %}
+                Консультативное заключение: 
+                <a href="{{ object.doc.url }}" download>{{ object }}</a>
+                {% if old_browser != True %}
+                    <button type="submit" name="del_file" value="{{ object.id }}"
+                    onClick="this.style='pointer-events: none;'; this.form.submit();">
+                        Удалить файл
+                    </button>
+                {% endif %}
+            </form>
+        {% else %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <strong>{{ upload_form.file.errors }}</strong>
+                {{ upload_form.file.label_tag }} {{ upload_form.file }}
+                <input type="submit" name="file_obj" value="Загрузить"
+                onClick="this.style='pointer-events: none;'; this.form.submit(); this.value='Отправка…';">
+            </form>
+        {% endif %}
+        <form id="patient_form" method="post">
+            {% csrf_token %}
+            <ul>
+            {% for field in form %}
+                {% if field.widget_type == "hidden" %}
+                    {{ field.errors }}
+                    {{ field }}
+                {% elif field.widget_type == "textarea" %}
+                    <li>
+                        <strong>{{ field.errors }}</strong>
+                        {{ field.label_tag }} <br> {{ field }}
+                    </li>
+                {% else %}
+                    <li>
+                        <strong>{{ field.errors }}</strong>
+                        {{ field.label_tag }} {{ field }}
+                        {% if old_browser and field.widget_type == 'date' %}
+                            <br> <strong>Пример ввода даты: 2020-06-29</strong>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            <input type="submit" name="pat_obj" value="Сохранить"
+            onClick="this.style='pointer-events: none;'; this.form.submit(); this.value='Отправка…';">
+        </form>
+    </div>
+    <div class="split right">
+        {% if form.plain_text.value %}
+            {{ form.plain_text.value|linebreaks }}
+        {% endif %}
+    </div>
+</body>
+</html>

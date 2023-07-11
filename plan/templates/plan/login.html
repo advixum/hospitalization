@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+<head>
+    <title>Госпитализация</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <meta charset="utf-8">
+    <meta name="description" content="Планирование госпитализации">
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv.js' %}"></script><![endif]-->
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv-printshiv.js' %}"></script><![endif]-->
+</head>
+<body>
+    {% if old_browser %}
+        {% if debug %}
+            <h1>{{ debug }}</h1><br>
+        {% endif %}
+        <h1>ПЛАН ГОСПИТАЛИЗАЦИИ</h1><br>
+        {% if user.is_authenticated %}
+            <strong>
+                <a href="{% url 'plan:main' %}">Перейти на главную</a><br>
+                Пользователь: {{ user.username }}. 
+                <a href="{% url 'plan:logout' %}">Выйти</a>
+            </strong>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Войти"><br>
+            </form>
+            {% if error_message %}
+                <p><strong>{{ error_message }}</strong></p>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <div id="head_menu">
+            <img src="{% static 'images/red-cross.png' %}" alt="Госпитализация">
+        </div>
+        <div id="start_page">
+            {% if debug %}
+                <h1>{{ debug }}</h1><br>
+            {% endif %}
+            <h1>ПЛАН ГОСПИТАЛИЗАЦИИ</h1><br>
+            {% if user.is_authenticated %}
+                <strong>
+                    <a href="{% url 'plan:main' %}">Перейти на главную</a><br>
+                    Пользователь: {{ user.username }}. 
+                    <a href="{% url 'plan:logout' %}">Выйти</a>
+                </strong>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Войти"><br>
+                </form>
+                {% if error_message %}
+                    <p><strong>{{ error_message }}</strong></p>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>

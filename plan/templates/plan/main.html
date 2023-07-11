@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Госпитализация</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <meta name="description" content="Планирование госпитализации">
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv.js' %}"></script><![endif]-->
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv-printshiv.js' %}"></script><![endif]-->
+</head>
+<script src="{% static 'patients.js' %}"></script> 
+<body>
+    {% include './head.html' %} 
+    {% if old_browser %}
+        <div id="calendar">
+            <table>
+                <strong>Полный список пациентов находится под календарём</strong>
+                {% for weeks in calendar %}
+                <tr>
+                    {% for day in weeks %}
+                    <td class="{{ day.past }}">
+                        <p>{{ day.date }}</p>
+                        <p>{{ day.weekday }}</p>
+                        <p><strong>Госпитализации:</strong></p>
+                        {% for h in day.hosp %}
+                            {% if h.confirmation %}
+                                <a id="id_green" href="{% url 'plan:update' h.id %}">{{ h }}</a><br>
+                            {% else %}
+                                <a id="id_red" href="{% url 'plan:update' h.id %}">{{ h }}</a><br>
+                            {% endif %}
+                        {% empty %}
+                            <p>Отсутствуют</p>
+                        {% endfor %}
+                        <p><strong>Операции:</strong></p>
+                        {% for o in day.oper %}
+                            {% if o.equipment == 'Стандарт' %}
+                                <a id="id_based" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% elif o.equipment == 'Нейромонитор' %}
+                                <a id="id_neuro" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% elif o.equipment == 'AWAKE' %}
+                                <a id="id_awake" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% endif %}
+                        {% empty %}
+                            <p>Отсутствуют</p>
+                        {% endfor %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <table>
+            {% if object_list|length > 0 %}
+                <tr>
+                    <th>Пациент</th>
+                    <th>Госпитализация</th>
+                </tr>
+            {% else %}
+                <p>Записи отсутствуют</p>
+            {% endif %}
+            {% for p in object_list %}
+            <tr>
+                <td><a href="{% url 'plan:update' p.id %}">{{ p.name }}</a></td>
+                {% if p.hosp_date == none %}
+                    <td><a href="{% url 'plan:update' p.id %}">Дата не указана</a></td>
+                {% else %}
+                    <td><a href="{% url 'plan:update' p.id %}">{{ p.hosp_date|date:"d-m-Y" }}</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <div id="calendar">
+            <table>
+                {% for weeks in calendar %}
+                <tr>
+                    {% for day in weeks %}
+                    <td class="{{ day.past }}">
+                        <p>{{ day.date }}</p>
+                        <p>{{ day.weekday }}</p>
+                        <p><strong>Госпитализации:</strong></p>
+                        {% for h in day.hosp %}
+                            {% if h.confirmation %}
+                                <a id="id_green" href="{% url 'plan:update' h.id %}">{{ h }}</a><br>
+                            {% else %}
+                                <a id="id_red" href="{% url 'plan:update' h.id %}">{{ h }}</a><br>
+                            {% endif %}
+                        {% empty %}
+                            <p>Отсутствуют</p>
+                        {% endfor %}
+                        <p><strong>Операции:</strong></p>
+                        {% for o in day.oper %}
+                            {% if o.equipment == 'Стандарт' %}
+                                <a id="id_based" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% elif o.equipment == 'Нейромонитор' %}
+                                <a id="id_neuro" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% elif o.equipment == 'AWAKE' %}
+                                <a id="id_awake" href="{% url 'plan:update' o.id %}">{{ o }}</a><br>
+                            {% endif %}
+                        {% empty %}
+                            <p>Отсутствуют</p>
+                        {% endfor %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="dropdown_patients_list">
+            <button onclick="click_function()" class="p_list">
+                <img src="{% static 'images/menu.png' %}" width="35" height="35">
+            </button>
+            <div id="drop_list" class="dropdown_content">
+                <table>
+                    {% if object_list|length > 0 %}
+                        <tr>
+                            <th>Пациент</th>
+                            <th>Госпитализация</th>
+                        </tr>
+                    {% else %}
+                        <p>Записи отсутствуют</p>
+                    {% endif %}
+                    {% for p in object_list %}
+                    <tr>
+                        <td><a href="{% url 'plan:update' p.id %}">{{ p.name }}</a></td>
+                        {% if p.hosp_date == none %}
+                            <td><a href="{% url 'plan:update' p.id %}">Дата не указана</a></td>
+                        {% else %}
+                            <td><a href="{% url 'plan:update' p.id %}">{{ p.hosp_date|date:"d-m-Y" }}</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

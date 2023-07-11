@@ -1,0 +1,57 @@
+{% load static %}
+{% if old_browser %}
+    <a href="{% url 'plan:main' %}">Главная</a>
+    <a href="{% url 'plan:new' %}">Новый пациент</a>
+    <a href="{% static 'files/htmc.pdf' %}">Коды ВМП</a>
+    <a href="{% url 'plan:table' %}">Госпитализация</a>
+    <a href="{% url 'plan:week' %}">Операции</a>
+    <a href="{% url 'plan:logout' %}">Выход</a>
+{% else %}
+    <div id="head_menu">
+        <img src="{% static 'images/red-cross.png' %}" alt="Госпитализация">
+        <ul>
+            <li><a href="{% url 'plan:main' %}">Главная</a></li>
+            <li><a href="{% url 'plan:new' %}">Новый пациент</a></li>
+            <li><a href="{% static 'files/htmc.pdf' %}">Коды ВМП</a></li>
+            <li><a href="{% url 'plan:table' %}">Госпитализация</a></li>
+            <li><a href="{% url 'plan:week' %}">Операции</a></li>
+        </ul>
+        
+    </div>
+    <div class="dropdown_menu">
+        <button class="drop_menu_button">Меню</button>
+        <br>
+        <div class="dropdown_menu_content">
+            <a href="{% url 'plan:main' %}">Главная</a>
+            <a href="{% url 'plan:new' %}">Новый пациент</a>
+            <a href="{% static 'htmc.pdf' %}">Коды ВМП</a>
+            <a href="{% url 'plan:table' %}">Госпитализация</a>
+            <a href="{% url 'plan:week' %}">Операции</a>
+        </div>
+    </div>
+    <div class="dropdown_reference">
+        <button class="drop_reference_button" title="Справка">
+            <img src="{% static 'images/doubts.png' %}">
+        </button>
+        <div class="dropdown_reference_content">
+            <p id="calendar">
+                При внесении новой записи с использованием консультативных
+                заключений, созданных на основе приложенных шаблонов в
+                форматах .rtf и .docx, система попытается выполнить
+                автозаполнение полей информацией из загруженного документа.
+                Символ меню правого края экрана вызывает общий список
+                пациентов.<br>
+                <a id="id_red" href="">Фамилия</a> - пациент не внесён в очередь госпитализации.<br>
+                <a id="id_green" href="">Фамилия</a> - данные пациента получены отделом госпитализации.<br>
+                <a id="id_based" href="">Фамилия</a> - стандартное операционное оборудование.<br>
+                <a id="id_neuro" href="">Фамилия</a> - операция с нейрофизиологическим мониторингом.<br>
+                <a id="id_awake" href="">Фамилия</a> - интраоперационное пробуждение пациента (AWAKE).<br>
+            </p>
+        </div>
+    </div>
+    <div id="logout_button">
+        <a href="{% url 'plan:logout' %}" title="Выход">
+            <img src="{% static 'images/logout.png' %}">
+        </a>
+    </div>
+{% endif %}

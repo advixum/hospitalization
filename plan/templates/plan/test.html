@@ -1,0 +1,21 @@
+<strong>session</strong> {{ get_expiry_age }}<br>
+
+<form action="{% url 'plan:test' %}" method="get">
+    <select name="data">
+        <option value="current" >current</option>
+        <option value="next" selected>next</option>
+    </select>
+    <input type="submit" value="submit">
+</form> 
+
+{% for i in get_items %}
+    {{ i }} 
+{% endfor %}
+<br>
+
+<strong>multiple files</strong>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ multiple_file_form }}
+    <input type="submit" name="multifile_obj" value="Upload">
+</form>

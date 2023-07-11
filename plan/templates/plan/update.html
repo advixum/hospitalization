@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Редактирование</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <meta name="description" content="Изменение существующей записи">
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv.js' %}"></script><![endif]-->
+    <!--[if IE]><script src="{% static 'html5shiv/html5shiv-printshiv.js' %}"></script><![endif]-->
+</head>
+<body>
+    {% include './head.html' %} 
+    <br>
+    <div class="split left">
+        <form method="post">
+            {% csrf_token %}
+            {% if patients.foreign_key %}
+                Консультативное заключение: 
+                <a href="{{ patients.foreign_key.doc.url }}" download>{{ patients.foreign_key }}</a>
+            {% endif %}
+        </form>
+        <form id="patient_form" method="post">
+            {% if old_browser and b %}
+                <strong>ОШИБКА СОХРАНЕНИЯ!!! ПОДРОБНОСТИ НАХОДЯТСЯ НИЖЕ!</strong>
+            {% endif %}
+            {% csrf_token %}
+            <ul>
+            {% for field in form %}
+                {% if field.widget_type == "hidden" %}
+                    {{ field.errors }}
+                    {{ field }}
+                {% elif field.widget_type == "textarea" %}
+                    <li>
+                        <strong>{{ field.errors }}</strong>
+                        {{ field.label_tag }} <br> {{ field }}
+                    </li>
+                {% else %}
+                    <li>
+                        <strong>{{ field.errors }}</strong>
+                        {{ field.label_tag }} {{ field }}
+                        {% if old_browser and field.widget_type == 'date' %}
+                            <br> <strong>Пример ввода даты: 2020-06-29</strong>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul><br>
+            Последнее изменение: {{ patients.alteration_date|date:"G:i:s d-m-Y" }} 
+            {% if patients.previous_user %}
+                Пользователь: {{ patients.previous_user }}<br>
+            {% else %}
+                Пользователь: {{ patients.alteration_user }}<br>
+            {% endif %}
+            <input type="submit" name="pat_obj" value="Сохранить"
+            onClick="this.style='pointer-events: none;'; this.form.submit(); this.value='Отправка…';">
+            <button type="submit" name="delete_obj"
+            onClick="this.style='pointer-events: none;'; this.form.submit();">
+                Удалить запись
+            </button>
+        </form>
+    </div>
+    <div class="split right">
+        {% if b %}
+            <strong>ОШИБКА!!!</strong>
+            <br><br>
+            Пользователь {{ patients.previous_user }} изменил запись
+            пациента прежде, чем вы сохранили изменения.
+            Обновлённые данные загружены в форму.<br>
+            Информация, которую вы пытались сохранить:<br>
+            Врач: <strong>{{ b.physician }}</strong><br>
+            Пациент: <strong>{{ b.name }}</strong><br>
+            Номер карты: <strong>{{ b.medical_card }}</strong><br>
+            Телефон: <strong>{{ b.phone }}</strong><br>
+            Госпитализация: <strong>{{ b.hosp_date }}</strong><br>
+            Операция: <strong>{{ b.oper_date }}</strong><br>
+            Диагноз: <strong>{{ b.diagnosis }}</strong><br>
+            МКБ: <strong>{{ b.icd10 }}</strong><br>
+            Код ВМП: <strong>{{ b.htmc_code }}</strong><br>
+            Квота: <strong>{{ b.quota }}</strong><br>
+            {% if b.equipment == 'Стандарт' %}
+                Тип: <strong>Стандарт</strong><br>
+            {% elif b.equipment == 'Нейромонитор' %}
+                Тип: <strong>Нейромонитор</strong><br>
+            {% elif b.equipment == 'AWAKE' %}
+                Тип: <strong>AWAKE</strong><br>
+            {% endif %}
+            Заметки: <strong>{{ b.notes }}</strong><br>
+        {% else %}
+            {{ patients.plain_text|linebreaks }}
+        {% endif %}
+    </div>
+</body>
+</html>

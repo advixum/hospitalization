@@ -1,0 +1,8 @@
+Выходим...
+<form method="post" id="logout">
+    {% csrf_token %}
+    <input type="hidden" />
+</form>
+<script type="text/javascript">
+    document.getElementById('logout').submit();
+</script>
